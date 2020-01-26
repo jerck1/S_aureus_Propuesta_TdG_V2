@@ -1,5 +1,4 @@
 \documentclass[12pt]{article}
-
 \usepackage{graphicx}
 \usepackage{epstopdf}
 \usepackage[spanish]{babel}
@@ -21,7 +20,7 @@
 \begin{center}
 %\Huge
 \LARGE
-Optimizaci\'{o}n de Simulaciones por Din\'{a}mica molecular para el Estudio de Propiedades Biof\'{i}sicas de Estafiloxantina en Membranas de DMPG y DPPG.\\
+Simulaciones por Din\'{a}mica Molecular para el Estudio de Propiedades Biof\'{i}sicas de Estafiloxantina en Membranas Modelo de \textit{Staphylococcus aureus}\\
 \vspace{3mm}
 \large
 John Erick Cabrera Ramirez 
@@ -32,7 +31,8 @@ John Erick Cabrera Ramirez
 
 \vspace{2mm}
 \large
-Director: Chad Leidy
+Directores: Chad Leidy (Departamento
+de física) y Camilo Aponte-Santamaría (Grupo tándem Max Planck de biofísica computacional, MPTG-CBP)
 
 \normalsize
 \vspace{2mm}
@@ -43,39 +43,42 @@ Director: Chad Leidy
 
 \normalsize
 \tableofcontents
-%\begin{abstract}
- %   \textit{Resumen}
- %   
-%\end{abstract}
+\newpage
+\begin{abstract}
+\input{resumen.tex}
+\end{abstract}
 \newpage
 \section{Introducci\'on}
 
-\textit{Staphylococcus aureus} es una bacteria pat\'{o}gena, que causa enfermedades infecciosas, del tipo Gram positiva. De acuerdo a REF7, la bacteria se encuentra en la piel y en el aparato respiratorio sin producir enfermedades en condiciones normales, pero que puede causar infecciones nicosomiales o intrahospitalarias en el sistema respiratorio, en los tejidos blandos y en el torrente sangu\'ineo \cite{1HarpavatS.NissimS.LipppincottsMicrocards:MicrobiologyFlashCards2012.}; incluso puede causar infecciones en las junturas de las pr\'otesis formando biopel\'iculas,  ver \cite{Meylan2018}.\\
+\textit{Staphylococcus aureus} es una bacteria pat\'{o}gena Gram Positiva que causa enfermedades infecciosas. De acuerdo a Kobayashi et al. \cite{Kobayashi2015PathogenesisAbscesses}, la bacteria es un colonizador común de la piel y del aparato respiratorio y actúa como un patógeno oportunista que puede causar infecciones nicosomiales (intrahospitalarias) en el sistema respiratorio, en los tejidos blandos y en el torrente sangu\'ineo \cite{HarpavatS.NissimS.LipppincottsMicrocards:MicrobiologyFlashCards2012.}. Incluso puede causar infecciones en las junturas de las pr\'otesis formando biopel\'iculas \cite{Meylan2018}.\\
 
-En la figura \ref{fig:sta} se muestra una microfotograf\'ia de \textit{Staphylococcus aureus} resistente a antibi\'oticos.\\
+%En la figura \ref{fig:sta} se muestra una microfotograf\'ia de \textit{Staphylococcus aureus} resistente a antibi\'oticos.\\
 
-\begin{figure}[h]
-\begin{center}
-  \includegraphics[scale=0.3]{saureus.jpg}
-  \caption{Imagen  de \textit{Staphylococcus aureus} obtenida con un microscopio electr\'onico de barrido (SEM). Tomado de \cite{HaneyCar2005PublicAureus}.}
-  \label{fig:sta}
-\end{center}
-\end{figure}
+%\begin{figure}[h]
+%\begin{center}
+ % \includegraphics[scale=0.3]{saureus.jpg}
+  %\caption{Imagen  de \textit{Staphylococcus aureus} obtenida con un microscopio electr\'onico de barrido (SEM). Tomado de \cite{HaneyCar2005PublicAureus}.}
+  %\label{fig:sta}
+%\end{center}
+%\end{figure}
 
-Desde el descubrimiento de \textit{S. aureus} como causante de una infecci\'on a una herida en 1881 \cite{Orent2006AMagazine}, se ha investigado su presencia en otras infecciones y se han utilizado antibi\'oticos como la penicilina, la meticilina y la vancomicina para controlar estas infecciones   \cite{1HarpavatS.NissimS.LipppincottsMicrocards:MicrobiologyFlashCards2012.}. Sin embargo, \textit{S. aureus} ha desarrollado resistencia a estos antibi\'oticos,  surgiendo la necesidad de buscar nuevos antibi\'oticos o incluso moléculas con un mecanismo de acción diferente. Algunas de estas nuevas moléculas son los péptidos antimicrobianos, estas se describen en la sección \ref{ss:anti}.\\
+Desde el descubrimiento de \textit{Staphylococcus aureus} como causante de una infecci\'on a una herida en 1881 \cite{Orent2006AMagazine} se ha investigado su presencia en otras infecciones y se han utilizado antibi\'oticos como la penicilina, la meticilina y la vancomicina para controlar estas infecciones   \cite{HarpavatS.NissimS.LipppincottsMicrocards:MicrobiologyFlashCards2012.}. No obstante, \textit{Staphylococcus aureus} ha desarrollado resistencia a algunos de estos antibi\'oticos,  de ahí que surja la necesidad de buscar nuevos antibi\'oticos o incluso moléculas con un mecanismo de acción diferente. Una posible familia de moléculas que podrían actuar como alternativas serían los péptidos antimicrobianos (estos se describen en la sección \ref{ss:anti}).\\
 
-Se ha encontrado que la rigidez de la membrana es uno de los factores determinantes en la tolerancia a antibióticos. Para \textit{Staphylococcus aureus} la rigidez de la membrana interna, en adelante la bicapa lipídica, puede ser modulada con base en la concentración de los carotenoides y en particular de un triterpeno carotenoide llamado estafiloxantina \cite{Nagendra2011}.\\
+De acuerdo a Perez-Lopez et al. \cite{Perez-LopezVariationsProperties} y Nagendra et al.  \cite{Nagendra2011} se ha encontrado que la bacteria modula la composición de su membrana plasmática frente a cambios en el medio. Esta modulación afecta las propiedades biofísicas de su membrana, es decir propiedades fisicoquímicas como la permeabilidad, la estructura y las propiedades mecánicas. El cambio de estas propiedades es un factor que mejora la tolerancia de la bacteria a la acción de péptidos antimicrobiales. Debido a esto, las propiedades biofísicas de la membrana se convierten en objeto de estudio y además son determinantes en la búsqueda de nuevas moléculas dirigidas a la membrana (moléculas blanco) que combatan la bacteria. \\
 
-La bicapa lipídica va a ser m\'as o menos r\'igida según su composición, lo cual implica corrimientos en la temperatura de transici\'on y cambios en la cooperatividad de la transici\'on de fase termotrópica. La estructura molecular de los fosfol\'ipidos presentes en la membrana hace que esta sea m\'as fluida cuando la estructura presenta mol\'eculas con m\'ultiples insaturaciones que inducen un incremento en espaciamiento, reduciendo la interacci\'on entre ellas. La membrana puede pasar de un estado s\'olido-ordenado (so) $L_{\beta}$ a un estado l\'iquido-desordenado (ld) $L_{\alpha}$ con un incremento de temperatura. En el caso de \textit{S. aureus} se ha descubierto que su membrana cambia el estado de rigidez de su membrana modulando la cantidad de estafiloxantinas presentes y la cantidad de cardiolipinas. \\
-%En cuanto a la fluidez de la membrana de acuerdo a la temperatura, si se estudia una membrana compuesta \'unicamente por glicerofosfol\'ipidos, tal como se muestra en \cite{Heimburg}, esta presenta diferentes estados de acuerdo a su temperatura:  laminar l\'iquido cristalino, gel laminar, laminar ondulada, entre otras.\\
+Al ser \textit{Staphylococcus aureus}\footnote{\textit{Staphylococcus aureus} al ser una bacteria Gram positiva está envuelta por una  membrana llamada bicapa lipídica y recubierta de una pared externa de péptidoglicando. Las membranas se explican en la subsección \ref{ss:mem}} una bacteria Gram positiva, consta de una membrana plasmática que es de interés en términos de la generación de nuevos antibióticos antimicrobiales debido a su rol como mediador del potencial electroquímico. Algunos estudios se han enfocado en cómo la composición de la bicapa lipídica interna afecta sus propiedades biofísicas con base en cambios en la concentración de ciertos lípidos como la cardiolipina \cite{Hernandez-Villa1BiophysicalPeptides} y de carotenoides como la estafiloxantina \cite{MelendezDelgado2018StudyingBilayers}, \cite{Perez-LopezVariationsProperties}, \cite{Nagendra2011}. Recientemente, en nuestros grupos, se han estudiado computacionalmente y experimentalmente propiedades mecánicas como la rigidez de la membrana, la orientación de la estafiloxantina, el área por lípido, la difusión y el parámetro de orden del deuterio de diferentes membranas modelo.\\
 
-Debido a la importancia de la rigidez de la membrana lip\'idica en los procesos de defensa de la c\'elula e incluso para la b\'usqueda de nuevos antibi\'oticos, el objetivo principal es estudiar las propiedades biofísicas de los carotenoides de \textit{Staphyloccocus aureus} cuando están inmersos en membranas modelo de DPPG y DMPG, que simulan la membrana de \textit{Staphyloccocus aureus}.  Las membranas se estudian para los estados termotrópicos  $L_{\alpha}$ y  $L_{\beta}$ \\
+En los experimentos realizados por Perez-Lopez et al. \cite{Perez-LopezVariationsProperties} y Nagendra et al.  \cite{Nagendra2011} se ha mostrado que cambios en el contenido de carotenoides en las membranas, en diferentes etapas de crecimiento \textit{Staphylococcus aureus}, y en membranas modelo compuestas por algunos lípidos mayoritarios de la bacteria, resultan en cambios en la rigidez. Se ha demostrado que este cambio en rigidez afecta la resistencia de la membrana a diferentes péptidos antimicrobiales. Sin embargo, es necesario mirar a nivel molecular la influencia local que tienen los carotenoides en la membrana para entender como la presencia de estas moléculas puede influir en las propiedades mecánicas. Debido a su resolución, los experimentos realizados no permiten vislumbrar diferentes propiedades moleculares que puedan explicar este fenómeno. Alternativamente, las simulaciones de dinámica molecular (MD por sus siglas en inglés) si permiten hacer este acercamiento. La MD se ha convertido en una herramienta excelente para estudiar membranas biológicas \cite{Marrink2019ComputationalMembranes}. Este método monitorea la evolución espacio-temporal de sistemas biológicos a una escala atómica y asi permite determinar información estructural (termo)dinámica y energética de membranas, que complementa y expande las técnicas experimentales. 
+Entre las propiedades que se pueden estudiar en detalle a través de simulaciones están la ubicación relativa de los carotenoides con respecto a los otros lípidos, la orientación y las interacciones que presenta exclusivamente el carotenoide estafiloxantina con los lípidos vecinos. Estos detalles moleculares influyen en los cambios de la rigidez de la membrana de \textit{Staphylococcus aureus}.\\
 
-Para estudiar las propiedades ópticas se usa la espectroscopía de fluorescencia. Mediante un fluorómetro, la espectroscopía de fluorescencia busca determinar el espectro de emisión y absorción de una molécula en solución, con lo cual podemos explorar la eficiencia cuántica, la cual provee información sobre que fracción de intensidad por segundo es emitida de forma radiactiva respecto a la intensidad por segundo incidente
+Para estudiar la ubicación, las interacciones con otros lípidos, el área por lípido,  de la estafiloxantina, en nuestro grupo se ha realizado un estudio computacional preeliminar mediante las simulaciones por dinámica molecular  implementadas en CHARMM \cite{MelendezDelgado2018StudyingBilayers}  (ver sección \ref{ss:pre}). Estas simulaciones requieren introducir ciertos parámetros relacionados con los campos de fuerza y con la geometría de la estafiloxantina, los cuales deben ser cuidadosamente seleccionados para que las simulaciones por dinámica molecular reflejen el comportamiento físico de la molécula.\\
+
+En una aproximación inicial, Meléndez et al. \cite{MelendezDelgado2018StudyingBilayers} utilizaron el protocolo implementado en CHARMM-GUI \cite{Sunhwan2008CHARMM-GUI:CHARMM} para determinar los parámetros de estafiloxantina. Algunos de los parámetros obtenidos a través de este procedimiento para la estafiloxantina no se han optimizado completamente. El objetivo de la  presente propuesta es optimizar los parámetros generados por CHARMM-GUI para la estafiloxantina, para que luego puedan ser utilizados en simulaciones MD a la luz del trabajo previo realizado \cite{MelendezDelgado2018StudyingBilayers}. Adicionalmente, proponemos modelar la estafiloxantina utilizando un segundo campo de fuerzas (llamado AMBER). Éste modelamiento nos permitirá estudiar la dinámica de bicapas lipídicas en presencia de estafiloxantina y confirmar que las observaciones que hagamos sean independientes del potencial de fuerzas utilizado.\\
+
 
 \section{Estado del Arte}
 \subsection{La membrana Bacteriana y sus compuestos presentes}\label{ss:mem}
-Según el tipo de membrana que posean las bacterias, estás pueden clasificarse en dos grandes géneros: las bacterias Gram positivas y las bacterias Gram negativas. Las bacterias Gram positivas poseen una bicapa lipídica envuelta en una capa compuesta por unos polímeros de azúcares y aminoácidos llamados peptidoglicando, ver figura \ref{fig:mem} mientras que la membrana de una bacteria Gram negativa posee dos bicapas lipídicas. Ya que \textit{Staphylococcus aureus} es una bacteria Gram positiva se discutirá principalmente la composición de la membrana de las bacterias Gram Positivas.\\
+Según el tipo de membrana que posean las bacterias, estás pueden clasificarse en dos grandes clases: las bacterias Gram positivas y las bacterias Gram negativas. Las bacterias Gram positivas poseen una sola bicapa lipídica envuelta en una capa compuesta por unos polímeros de azúcares y aminoácidos llamados peptidoglicando (ver figura \ref{fig:mem}), mientras que las membranas de bacterias Gram negativa poseen dos bicapas lipídicas. Ya que \textit{Staphylococcus aureus} es una bacteria Gram positiva se discutirá principalmente la composición de la membrana de las bacterias Gram Positivas.\\
 
 \begin{figure}[h]
 \begin{center}
@@ -85,188 +88,172 @@ Según el tipo de membrana que posean las bacterias, estás pueden clasificarse 
   \label{fig:mem}
 \end{center}
 \end{figure}
-La bicapa lipídica es una membrana presente en todos las células y  que está compuesta mayoritariamente por lípidos. Los lípidos se acomodan de tal manera que el espesor de la membrana sea de dos lípidos. Todos los lípidos están compuestos por una o varias cadenas de ácidos grasos (cadenas hidrocarbonadas con carboxilo) unidas a diferentes sustituyentes los cuales pueden presentar carga o no a pH fisiológico. De acuerdo a los sustituyentes y al tipo de ácidos grasos cada lípido tiene un  nombre y unas propiedades como la carga y la polaridad.Los lípidos forman bicapas debido a la presencia del agua ya que al ser moléculas anfipáticas la parte hidrofílica del lípido interactúa con el agua mientras que la parte hidrofóbica no interactúa con esta. Estas interacciones hacen que sea más estable encontrar los lípidos inmersos en el agua formando agregados sin mezclarse con el agua. La interacci\'on lateral entre estas mol\'eculas se da trav\'es de fuerzas no covalentes lo que le confiere propiedades de cristal l\'iquido caracterizado por la capacidad de presentar transiciones de fase s\'olido-l\'iquido. \\
+La bicapa lipídica es una membrana presente en todos las células la cual está compuesta mayoritariamente por lípidos. Los lípidos se acomodan de tal manera que el espesor de la membrana sea de dos lípidos de grosor. En su mayoría, con excepciones como los esteroles, los lípidos están compuestos por una o varias cadenas de ácidos grasos no polares (cadenas hidrocarbonadas con carboxilo) unidas a diferentes sustituyentes polares los cuales pueden presentar carga o no a pH fisiológico. De acuerdo a los sustituyentes y al tipo de ácidos grasos, cada lípido presenta propiedades fisicoquímicas específicas como la carga total, la polaridad, y el largo que lo distinguen a nivel biofísico con los otros lípidos. Los lípidos forman bicapas debido a la presencia del agua ya que al ser moléculas anfipáticas (combinando motivos polares y apolares) se orientan con respecto a esta. La parte hidrofílica del lípido interactúa con el agua mientras que la parte hidrofóbica no interactúa con esta, lo que induce reorientación y agregación de los lípidos. Estas interacciones hacen que sea más estable encontrar los lípidos inmersos en el agua formando agregados sin mezclarse con el agua. La interacci\'on lateral entre estas mol\'eculas se da a trav\'es de fuerzas no covalentes lo que le confiere propiedades de cristal l\'iquido caracterizado por la capacidad de presentar transiciones de fase s\'olido-l\'iquido y difusión lateral. \\
 
-La bicapa lipídica de \textit{Staphylococcus aureus} esta compuesta principalmente por fosfatidilgliceroles (PG), cardiolipina (CL), lifosfoglicandos (LPG) y glicopeptidolípidos (GPL) \cite{Sohlenkamp2015BacterialPathways}. En la figura \ref{fig:DMPG} se muestra la fórmula estructural del Dimiristoilfosphatidilglicerol (DMPG), el cual es un lídido con el fosfatidilglicerol unido a dos miristoil (provenientes del ácido mirístico). Se observa que este lípido forma un espaciaminento entre las cadenas hidrocarbonadas más grande que la cabeza del lípido, esto hace que la presencia de DMPG disminuya la rigidez de la membrana plasmática.
+La bicapa lipídica de \textit{Staphylococcus aureus} esta compuesta principalmente por fosfatidilgliceroles (PG), cardiolipina (CL), lifosfoglicandos (LPG) y glicopeptidolípidos (GPL) \cite{Sohlenkamp2015BacterialPathways}. En la figura \ref{fig:DMPG} se muestra la fórmula estructural del Dimiristoilfosphatidilglicerol (DMPG), el cual es un lípido con el fosfatidilglicerol unido a dos miristoil (provenientes del ácido mirístico). 
 \\
 
 \begin{figure}[h]
 \begin{center}
-    \includegraphics[scale=0.4]{DMPG.pdf}
+    \includegraphics[scale=0.4]{DMPG.png}
   \caption{Fórmula estructural del Dimiristoilfosphatidilglicerol (DMPG). Tomada de \cite{CHEMDRUGDMPGDimyristoylphosphatidylglycerol}.}
   \label{fig:DMPG}
 \end{center}
 \end{figure}
 Las membranas lipídicas además de tener lípidos contienen otros tipos de biomoléculas como los carotenoides, las proteínas y los glicolípidos que tienen relevancia fisiológica en la célula. Los carotenoides en particular pigmentan las células. En el caso de \textit{Staphylococcus aureus} se ha descubierto que los carotenoides juegan un papel importante en la integridad de la membrana celular y protegen a la bacteria frente a estrés oxidativo \cite{Nagendra2011}. La protección de los carotenoides en la membrana se ve reflejada por un aumento de su rigidez, de forma similar al papel que juega el colesterol en la membrana eucariótica. \\
 
-Uno de los carotenoides más relevantes en \textit{Staphylococcus aureus} es la estafiloxantina la cual le da el nombre a la bacteria ya que le da un color aúreo. La estafiloxantina es un  triterpeno carotenoide en que posee dos cadenas hidrocarbonadas con insaturaciones conjugadas tipo trans, las dos cadenas están unidas a un azúcar mediante enlaces tipo eter, ver figura \ref{fig:stx}. Debido a los enlaces dobles conjugados de las cadenas hidrocarbonadas en la estafiloxantina, esta se convierte en un factor que aumenta el empaquetado de la bicapa lípidica, ya que disminuye la distancia entre los vecinos \cite{Heimburg}.\\
+Uno de los carotenoides más relevantes en \textit{Staphylococcus aureus} es la estafiloxantina la cual le da el nombre a la bacteria ya que le da un color aúreo. La estafiloxantina es un  triterpeno carotenoide que posee dos cadenas hidrocarbonadas. Una de ellas es un ácido graso parecido a otros acidos grasos de la membrana, caracterizado por ser saturado y con presencia de ramificaciones metiles. El otro es un ácido graso diaponeurosporenoico, que presenta insaturaciones conjugadas tipo trans y ramificaciones.  Las dos cadenas están unidas a un molécula de glucosa mediante enlaces tipo éster, ver figura \ref{fig:stx}. Debido a los enlaces dobles conjugados de la cadena diaponeurosporenoica, esta es rígida, ya que estos enlaces dificultan rotaciones intramoleculares. Esta rigidez se convierte en un factor que aumenta el empaquetado de la bicapa lípídica, ya que disminuye la distancia entre lípidos vecinos \cite{Heimburg}.\\
 
 \begin{figure}[h]
 \begin{center}
-  \includegraphics[scale=0.4]{staphyloxanthin.png}
-  \caption{Fórmula estructural de la estafiloxantina. Tomada de \cite{KEGGC16148}.}
+  \includegraphics[scale=0.4]{stx_problems.png}
+  \caption{Fórmula estructural de la estafiloxantina. Tomada de \cite{MelendezDelgado2018StudyingBilayers}.}
   \label{fig:stx}
 \end{center}
 \end{figure}
- Adem\'{a}s, estas insaturaciones conjugadas le da propiedades antioxidantes que protegen a la bacteria frente al estrés oxidativo del medio.
+ Adem\'{a}s, estas insaturaciones conjugadas le dan propiedades antioxidantes que protegen a la bacteria frente al estrés oxidativo del medio, al poder incorporar especies reactivas oxidativas \cite{Nelson2011}.
 \subsection{Resistencia a tratamientos antibióticos de \textit{Staphylococcus aureus}}\label{ss:anti}
-Desde que se ha descubierto que \textit{Staphylococcus aureus} es una bacteria patógena, se ha combatido con antibióticos como la penicilina pero a mediados del siglo XX \textit{Staphylococcus aureus} comenzó a presentar resistencia. Posteriormente se han aplicado otros antibióticos como la meticilina pero también ha presentado resistencia a este antibiótico. Otro antibiótico que se aplica como tratamiento a \textit{Staphylococcus aureus}  es la vancocimina. De ahí que surga la necesidad de buscar nuevos medicamentos que combatan \textit{S. aureus}.\\
+Desde el descubrimiento de la penicilina, infecciones de \textit{Staphylococcus aureus} han sido tratadas con este antibiótico. Sin embargo, a mediados del siglo XX \textit{Staphylococcus aureus} comenzó a presentar resistencia a esta familia de antibióticos $\beta$-lactámicos, incluida la meticilina. Posteriormente se han aplicado otros antibióticos como la vancomicina, pero también se ha ido generando  resistencia a estos otros antibióticos.  De la resistencia a antibióticos surge la necesidad de buscar nuevos medicamentos que combatan \textit{S. aureus}.\\
 
-Un p\'eptido antimicrobiano es un p\'eptido (es decir un olig\'omero de amino\'acidos) que hace parte de la respuesta inmune de los casi todos las formas de vida aunque también puede crearse sintéticamente. Los péptidos antimicrobianos se clasifican según la estructura secundaria que tienen: $\alpha$ h\'elices, $\beta$ plegados.   Los p\'eptidos antimicrobianos interact\'uan con la membrana de la bacteria produciendo orificios que causan p\'erdida de contenido y muerte celular.\\
+Un p\'eptido antimicrobiano es  un olig\'omero de amino\'acidos, de alrededor de 20 aminoacidos de largo, que hace parte de la respuesta inmune de un amplio espectro de especies, y que son faciles de sintetizar en el laboratorio. Los péptidos antimicrobianos se clasifican según la estructura secundaria que tienen: $\alpha$ h\'elices, $\beta$ plegados.   Los p\'eptidos antimicrobianos interact\'uan con la membrana de la bacteria produciendo orificios que causan p\'erdida de contenido, pérdida del potencial electroquímico y muerte celular.\\
 
+Los péptidos antimicrobiales forman estructuras anfipáticas que inducen su adhesión a la membrana. Al aumentar su concentración superficial, se induce una inserción de estos péptidos, atravesando la membrana y generando poros. Son de interés los péptidos antimicrobiales catiónicos ya que la membrana de \textit{Staphylococcus aureus} es aniónica y estos péptidos tienen una preferencia para adherirse a estas membranas. La formación de poros es un proceso mecánico que requiere la deformación de la membrana para suceder. Al incrementar la rigidez de la membrana, se dificulta la inserción del péptido generando resitencia \cite{Perez-LopezVariationsProperties}, \cite{Nagendra2011}. Por este motivo se vuelve relevante estudiar como la composición de la membrana, en particular la presencia de stafiloxantina, modula la rigidez de la membrana.
+\subsection{Dinámica Molecular y Campos de Fuerza}\label{ss:md} 
+Un paradigma central en la biología es la existencia de un vínculo entre la secuencia, la estructura, la dinámica y la función de una biomolécula, entiéndase esta última como cualquier molécula con un rol biológico \cite{Cui2006}. No únicamente la secuencia de aminoácidos o secuencia de nucleóticos, sino también la estructura y a la dinámica son determinantes en la función de cualquier biomolécula. En el caso de las membranas biológicas, la complejidad aumenta, ya que a las proteínas de membrana, que se encargan de diversas funciones fisiológicas para las células y sus organelos, se suma una rica composición de lípidos. Los lípidos no son entes pasivos que proveen un medio bidimensional para las proteínas de membrana. Por el contrario, ellos afectan tanto las propiedades bioquímicas como las propiedades físicas, como la movilidad y la rigidez de las membranas y así en últimas influir en su función.\\
 
-\subsection{Transiciones de Fase en L\'ipidos}\label{ss:fase}
-En soluci\'on con agua, los l\'ipidos tienden a formar agregados debido a  su car\'acter anfip\'atico. Para concentraciones mucho mayores a cierta concentraci\'on cr\'itica \cite{Heimburg}, los l\'ipidos tienden a formar bicapas. Las fases de estas bicapas se conocen como fases laminares y seg\'un su incremento en la temperatura se clasifican en:
+Un método poderoso para estudiar la dinámica de biomoléculas, y en particular las membranas biológicas, es el de las simulaciones por dinámica molecular (MD por sus siglas en inglés).\\
+
+En la dinámica molecular se resuelven numéricamente las ecuaciones de movimiento de Newton para cada una de las partículas que constituyen el sistema, por ejemplo a nivel de átomos (alta resolución espacial) o grupos de atomos (menor resolución espacial), de donde se obtiene la trayectoria en función del tiempo de cada partícula. Una vez obtenida la trayectoria se pueden analizar las propiedades del sistema en estudio, a partir las velocidades, posiciones y energías de interacción de todo el sistema, registradas durante la simulación.\\
+
+Las ecuaciones de movimiento de Newton para un conjunto de $N$ partículas (3N coordenadas) están restringidas a una función de energía potencial, denominada $V(\vec{r})$, dependiente solo de la distancia entre partículas y afectando las fuerzas y torques de interacción. Estas ecuaciones tienen la forma \cite{Goldstein2001}:
+
+\begin{equation}\label{eq:1}
+m_i\frac{\mathrm{d}^2\vec{r_i}}{\mathrm{d}t^2}=-\vec{\nabla_i}V(\vec{r}_1,...,\vec{r}_N) \text{\hspace{30pt}}i=1,2,...,N,
+\end{equation}
+donde $m_i$ es la masa de la $i$-ésima partícula, $\vec{r_i}$ es su posición y el gradiente $ \vec{\nabla_i}$ se calcula sobre las coordenadas de posición de la $i$-ésima partícula.\\
+
+Para resolver las ecuaciones de movimiento es necesario conocer la fuerza aplicada al sistema en cada instante de tiempo, esta se halla a partir de la energía potencial sobre las partículas. En la sección de Campos de fuerza se detalla la naturaleza de estos potenciales.
+\subsubsection{Campos de Fuerza}
+Un campo de fuerza (o \textit{force field} e inglés) es un conjunto de términos empíricos que modelan la interacción entre moléculas. El propósito de estos es poder representar la energía potencial de un conjunto de partículas interactuantes a través de funciones aritméticas simples, que puedan ser evaluadas numéricamente de manera eficiente a través del computador \cite{Kukol2014MolecularEdition}. Algunos de los campos de fuerza más utilizados para biomoléculas son AMBER, CHARMM, GROMOS y OPLS-AA. Todos estos campos de fuerza tienen en común la separación de la energía potencial en dos términos: interacciones enlazantes e interacciones no enlazantes. En forma de ecuación un campo de fuerza típicamente contiene los siguientes términos:
+\begin{equation}\label{eq:5}
+    V=V_{\text{enlazante}}+V_{\text{no enlazante}}
+\end{equation}
+Cada uno de estos está a su vez compuesto por los siguientes términos:
 \begin{itemize}
-    \item \textit{Fase} $L_{c}$: Los l\'ipidos forman bicapas que presentan un orden en las tres dimensiones, es decir, las cabezas polares del l\'ipido presentan un patr\'on en forma de red mientras que las cadenas apolares est\'an ordenadas en configuraci\'on  trans.
-    \item  \textit{Fase} $L_{\beta'}$: Esta es conocida como la fase gel. En esta los l\'ipidos se encuentran mayoriatariamente ordenados pero no todas cadenas hidrocarbonadas son trans. Se llama $\beta'$ porque algunos l\'ipidos presentan una inclinaci\'on respecto al plano de la normal, \cite{Heimburg}.
-    \item  \textit{Fase} $P_{\beta '}$: Esta fase es una mezcla entre las fases de gel $L_{\beta '}$ y fluida $L_{\alpha}$. Se denomina as\'i porque la membrana presenta ondulaciones peri\'odicas.
-      \item  \textit{Fase} $L_{\alpha}$: Esta es la fase l\'iquida o fluida de la membrana donde no hay un orden lateral de los grupos polares ni en las cadenas hidrocarbonadas.
+\item Interacciones enlazantes: $V_{cov}$, que tienen en cuenta los enlaces covalentes entre átomos; $V_{ang}$, vibraciones angulares entre triadas de átomos y $V_{tor}$, movimientos de torsión entre grupos de cuatro átomos conectados por dos enlaces covalentes:
+\begin{eqnarray}\label{eq:6}
+V_{cov}(r)&=&\sum_{enlaces}k_r\left(r-r_0\right)^2\\
+V_{ang}(r)&=&\sum_{val}k_\theta\left(\theta-\theta_{0}\right)^2\\
+V_{tor}(r)&=&\sum_{dihedros}\sum_{n}\frac{V_n}{2}\left[1+\cos(n\phi-\gamma)\right]
+\end{eqnarray}
+\item Interacciones no enlazantes: que se componen de interacciones de corto alcance de Van der Waals, modeladas a través de un potencial de Lennard Jones, $V_{LJ}$ e interacciones eletrostáticas descritas por medio del potencial de Coulomb, $V_{Coul}$.
+\begin{eqnarray}\label{eq:7}
+V_{LJ}(r)&=&\sum_{j=1}^{N+1}\sum_{i=j+1}^N f_{ij}\left\{\epsilon_{ij}\left[\left(\frac{r_{0ij}}{r_{ij}}\right)^{12}-2\left(\frac{r_{0ij}}{r_{ij}}\right)^6\right]\right\}\\
+V_{Coul}(r)&=&\sum_{j=1}^{N-1}\sum_{i=j+1}^{N}\frac{q_iq_j}{4\pi\epsilon_0\epsilon_R r_{ij}}
+\end{eqnarray}
 \end{itemize}
-Cuando ocurre una transici\'on de fase de primer orden, la presi\'on y la temperatura son aproximadamente constantes. El calor espec\'ifico a presi\'on constante se calcula mediante la relaci\'on:
-\begin{equation}
-    c_{p}=\left(\frac{\partial H}{\partial T}\right)_{P}
-\end{equation}\label{eq:1}
-Donde $H$ es la entalp\'ia del sistema, en este caso de la membrana bacteriana. Cuando ocurre la transici\'on de fase, hay un salto de la entalp\'ia. Cuando hay un salto en la entalp\'ia, el calor espec\'ifico $c_{p}$ presenta un pico, como una funci\'on tipo aguja.\\
-Para liposomas con un solo l\'ipido se encuentran mediante m\'etodos de calorimetr\'ia las curvas de calor espec\'ifico mostradas en la figura \ref{fig:esp3}. Los tres compuestos son dimiristoil fosfatidilcolina ( por sus siglas en ingl\'es DMPC), dipalmitoilfosfatidilcolina ( por sus siglas en ingl\'es DPPC) y diasteroilfosfatidilcolina ( por sus siglas en ingl\'es DSPC).
-\begin{figure}[h]
-\begin{center}
-  \includegraphics[scale=0.5]{cp.png}
-  \caption{ Calor espec\'ifico en funci\'on de la temperatura para tres l\'ipidos diferentes. Los picos representan la transici\'on de fase cada uno.Tomado de \cite{Heimburg}}.
-  \label{fig:esp3}
-  \end{center}
-\end{figure}
- Como la composici\'on de la bicapa fosfolip\'idica de \textit{S. aureus} no contiene \'unicamente el mismo tipo de fosfol\'ipidos, sino principalmente los que se han mencionado previamente, entonces no se espera obtener una transici\'on de fase con un salto perfecto, sino que tenga un ancho de banda tal como se muestra en la figura \ref{fig:ent2}, para m\'as detalles ver \cite{Ocampo2010TheAureus}.\\
-\begin{figure}[h]
-\begin{center}
-  \includegraphics[scale=0.3]{transicion.png}
-  \caption{ N\'umero de onda de la banda de CH$_{2}$ en funci\'on de la temperatura y su derivada para la membrana de \textit{S. aureus}. Imagen tomada de \cite{Ocampo2010TheAureus}.}
-  \label{fig:ent2}
-  \end{center}
-\end{figure}
-En la figura \ref{fig:ent2} cabe destacar que el n\'umero de onda es directamente proporcional a la energ\'ia de vibraci\'on de las mol\'eculas debido a la relaci\'on $E=h\nu$ con $\nu$ la frecuencia de vibraci\'on.\\
-La gr\'afica \ref{fig:ent2} se obtuvo mediante la t\'ecnica de espectroscop\'ia de FITR variando la temperatura de la muestra.
+Las constantes $k_r,k_\theta,f_{ij},\epsilon_{ij},r_{0ij},q_{i},q_{j}$ son las constantes emp\'{i}ricas que definen el campo de fuerzas. Estas constantes se determinan de distintas maneras , por ejemplo a través de cálculos de mecánica cuántica o por optimizacionres para reproducir propiedades termodinámicas de los sistemas en cuestión como energías de solvatación y funciones de partición.
 
+%Una de las diferencias entre los programas está en el tratamiento de los ángulos dihedros impropios, es decir de los involucrados en la quiralidad de las moléculas. Por ejemplo, CHARMM Y GROMOS agregan a las interacciones enlazantes un potencial armónico entre los átomos terminales del dihedro (en A-B-C-D serían A y C) denomindado de Urey-Bradley con la forma:
+%\begin{equation}\label{eq:8}
+ %   V_{\mathrm{UB}}=\sum_{\mathrm{Urey-Bradley}} K_{\mathrm{UB}}(b^{A-C}-b^{A-C,0})^2
+%\end{equation}
+%En AMBER y OPLS-AA esta interacción es incluida en el término del potencial de torsiones.\\
 
-\section{Objetivo General}
+%En cuanto a los parámetros de los términos enlazantes tanto AMBER como CHARMM calculan las constantes de los términos no enlazantes/entre pares de átomos $i$,$j$ como:
+%\begin{equation}\label{eq:9}
+ %  \epsilon_{ij}=\sqrt{\epsilon_{i}\epsilon_{j}}
+%\end{equation}
+%\begin{equation}\label{eq:10}
+ %  r_{0ij}=\frac{1}{2}\left(r_i+r_j\right)
+%\end{equation}
+\subsubsection{Solución de las ecuaciones de Movimiento}
+Debido al tamaño de los sistemas biológicos a considerar, en el caso de estafiloxantina embebida en una bicapa con 128 lípidos de DMPG (O DPPG) del orden de 15000 átomos \cite{MelendezDelgado2018StudyingBilayers}, las ecuaciones de movimiento \eqref{eq:1} deben resolverse numéricamente. Para resolverlas se usan algoritmos como el de Verlet, el de ``\textit{leapfrog}'', el de velocidad de Verlet o el de Beeman \cite{Mazur1997CommonRevisited}.\\
+%En el algoritmo de Verlet se hace una aproximación en series de Taylor a segundo orden de las posiciones hacia adelante $\vec{r}_{i}(t_{n+1})$ y hacia atrás $\vec{r}_{i}(t_{n-1})$, ver \cite{MelendezDelgado2018StudyingBilayers},\cite{Mazur1997CommonRevisited}; que al restarlas da la siguiente solución iterada:
+%\begin{equation}\label{eq:2}
+%t_{n}=n\Delta t
+%\end{equation}
+%\begin{equation}\label{eq:3}
+%\vec{r}_{(i,t_{n+1})}=2\vec{r}_{(i,t_{n})}-\vec{r}_{(i,t_{n-1})}+\vec{a}_{(i,t_{n})}(\Delta t)^2
+%\end{equation}
+%\begin{equation}\label{eq:4}
+%\vec{v}_{(i,t_{n})}=\frac{\vec{r}_{(i,t_{n+1})}-\vec{r}_{(i,t_{n-1})}}{2\Delta t}
+%\end{equation}
+%Donde la ecuación \eqref{eq:4} para la velocidad es una expresión de diferencias finitas y se obtuvo mediante el promedio entre $v_{(i,tn+\Delta t/2)}$ y $v_{(i,tn-\Delta t/2)}$.
+%Obsérvese que las ecuaciones \eqref{eq:3} y \eqref{eq:4} solo dependen de las coordenadas anteriores y no de las velocidades. Luego, solo es necesario usar la ecuación \eqref{eq:3} para encontrar la trayectoria de la partícula.\\
 
-%Objetivo general del trabajo. Empieza con un verbo en infinitivo.
-Estudiar las propiedades biof\'isicas de carotenoides de \textit{S. aureus} en la fases $L_\alpha$ y $L_\beta$ de membranas modelo de DMPG y DPPG a trav\'es del an\'alisis de espectroscop\'ia de fluorescencia.
+En el algoritmo de ``leapfrog" se resuelven las ecuaciones de movimiento \eqref{eq:1} hallando las posiciones de las partículas para los tiempos $t_1,t_2=t_1+\Delta t,...,t_n=t_{1}+n\Delta t$, mientras que las velocidades de las partículas se hallan para los tiempos $t_1-\Delta t/2,t_2=t_1+\Delta t/2,...,t_n=t_{1}+(n-1/2)\Delta t$, ver \cite{Mazur1997CommonRevisited}.  Este algoritmo tiene la forma:
+\begin{equation}\label{eq:5}
+\vec{v}{(i,t_{n+1/2})}=\vec{v}{(i,t_{n-1/2})}+\vec{a}{(i,t_{n})}\Delta t,
+\end{equation}
+\begin{equation}\label{eq:6}
+\vec{r}{(i,t_{n+1})}=\vec{r}{(i,t_{n-1})}+\vec{v}{(i,t_{n+1/2})}\Delta t.
+\end{equation}
+Como se han aproximado las ecuaciones para la velocidad y para la aceleración a una línea recta, entonces el valor medio de las velocidad entre los tiempos $t_{n-1/2}$ y $t_{n+1/2}$ es:
+\begin{equation}\label{eq:7}
+\vec{r}{(i,t_{n+1})}=\vec{r}{(i,t_{n-1})}+\vec{v}{(i,t_{n+1/2})}\Delta t.
+\end{equation}
+Utilizando las ecuaciones \eqref{eq:5}, \eqref{eq:6} y \eqref{eq:7} se obtiene otra forma de escribir el algoritmo de leapfrog:
+\begin{eqnarray}
+  x_{i+1} &= x_i + v_i\, \Delta t + \tfrac{1}{2}\,a_i\, \Delta t^{\,2}, \\
+  v_{i+1} &= v_i + \tfrac{1}{2}(a_i + a_{i+1})\,\Delta t.
+\end{eqnarray}
 
-\section{Objetivos Espec\'ificos}
+Por otro lado, las condiciones iniciales para resolver los algoritmos pueden ser obtenidas por métodos experimentales como la cristalografía de rayos-X, resonancia magnética nuclear o microscopía electrónica criogénica (más común en proteínas y ácidos nucléicos) o computacionalmente para sistemas de muchas moléculas, realizando un autoensamblaje y minimizando la energía del ensamblaje. Las velocidades iniciales se generan de manera aleatoria a partir de la distribución Maxwell-Boltzmann para la energía cinética a una temperatura $T$ dada.\\
+%\vec{v}_{i}(t_{n}+\Delta t/2)=\vec{v}_i(t_{n}-\Delta t/2)+\frac{\Delta t}{m_i}\vec{F}_{i}(t_{n})
+%\subsection{Simulaciones en Membranas}\label{ss:smem}
+\subsection{Trabajo Preliminar}\label{ss:pre}
+\subsubsection{Estudio del Rol de Estafiloxantina en la modulación de parámetros estructurales de bicapas lipídicas compuestas por DMPG y DPPG  \cite{MelendezDelgado2018StudyingBilayers}}
+Para estudiar el rol de la estafiloxantina en bicapas lipídicas compuestas por dimiristoil fosfatidilglicerol (DMPG) y dipalmitoil fosfatidilglicerol (DPPG) Meléndez et al. \cite{MelendezDelgado2018StudyingBilayers} realizaron simulaciones por dinámica molecular para 4 sistemas con las siguientes composiciones: DMPG, DMPG$+$estafiloxantina, DPPG y DPPG$+$estafiloxantina. De los resultados obtenidos de estas simulaciones se obtuvieron parámetros que dan cuenta del efecto de la estafiloxantina en los lípidos circundantes a nivel global y local, así como su orientación dentro de la membrana. Estos parámetros incluyen el parámetro de orden del Deuterio $S_{CD}$, el espesor de la membrana, el coeficiente lateral de difusión y el área por lípido. \\
 
-%Objetivos espec\'ificos del trabajo. Empiezan con un verbo en infinitivo.
+Estas simulaciones revelaron que la estafiloxantina adopta dos orientaciones diferentes respecto a la membrana. La estafiloxantina se encontró mayoritariamente alrededor de los 100\textdegree para el sistema   DMPG+estafiloxantina. Para el sistema  DPPG+estafiloxantina muestreó dos ángulos preferenciales,  uno más probable alrededor de 100\textdegree y otro un poco menos probable, alrededor de 135\textdegree. Los ángulos menores a 120\textdegree representan una orientación horizontal de la estafiloxantina y los mayores a 120\textdegree  una orientación vertical respecto al plano normal de la membrana.\\
 
-\begin{enumerate}
-	\item 
-	\item 
-	\item 
-	\item 
-\end{enumerate}
-\section{Metodolog\'ia}
-\begin{itemize}
-    \item \textbf{Objetivo 1} \textit{Aislar carotenoides totales de \textit{S.aureus} crecido en fase estacionaria.}\\
-    
-    \textbf{Extracción de carotenos apartir de \textit{S.aureus}} Para aislar los carotenoides de \textit{S.aureus} inicialmente se toma una colonia de la bacteria y se cultiva durante 48 horas en un agitador (overnight), el cultivo se coloca en la centrífuga obteniéndose en la parte baja un sedimento (pellet) y un supernadante (la parte superior). Luego se disuelven 50 $m$g del sedimento obtenido en la centrífuga en 1$m$L de metanol y se le añaden perlas de vidrio. La solución se mezcla en un vortex por 30s.  Posteriormente, se separan las células mediante una centrífuga que gira a 8500 rpm durante 15 min a 4\textdegree C. En la parte baja del frasco centrífugado se obtiene un sedimento y un supernadante que contiene carotenoides, fosfolípidos y proteínas. El supernadante que contiene los carotenos se lleva a otro frasco y se mezcla con 1.7M de \ce{NaCl} y acetato etílico con proporciones 3:1 V/V añadiendo primero el acetato etílico, al hacer esto se obtiene una separación de fases. Al centrifugar se obtiene en la fase superior una capa de acetato etílico la cual contiene carotenoides y lípidos, esta se pasa cuidadosamente a otro frasco mientras que a la fase inferior se le agrega 1$m$L de acetato etílico. Ambas fases orgánicas se combinan y se secan con \ce{Na_2SO_4} anhidro; la solución se decanta. El solvente con carotenoides se seca con \ce{N_2} obteniéndose un polvo. El polvo se disuelve en benceno y acetona en proporción 1:1 V/V, enfriándolo posteriormente a -20\textdegree C. Al hacer esto se precipitan los fosfolípidos y queda un supernadante con carotenoides. El supernadante con carotenoides se pasa a un frasco y se seca nuevamente con \ce{N_2}. Para realizar medidas de absorción se disuelve el secado en benceno. La cantidad de carotenoides se cuantifica mediante mediciones de absorción en el nanodrop entre 400$n$m y 550$n$m. Los carotenoides purificados se secan con benceno y se disuelven en cloroformo para incorporarlos a los liposomas modelo.
-    
-    \item \textbf{Objetivo 2} \textit{Generar vesículas unilamelares de DMPG y DPPG conteniendo carotenoides en proporciones de 5, 10,y 15 \% mol de carotenoides.}.\\
-    
-%Los vesículas unilamelares son generadas a partir de extractos de lípidos de \textit{Staphylococcus aureus}. Se realiza una extracción de lípidos para las fases de crecimiento exponencial y estacionaria. La extracción de lípidos es realizada por el procedimiento de Bligh and Dyer. En este procedimiento se toma la muestra bacterias y se pasa a una solución 1 a 2 V/V de cloroformo-etanol. La dilución se mezcla con un vortex y posteriormente se le añade 1 volumen de cloroformo, se mezcla. Luego, se añade agua destilada y se mezcla quedando una solución de cloroformo-etanol-agua de la cual se extraen los lípidos por filtros o por centrífuga, ver \cite{Perez-LopezVariationsProperties}.\\
-\textbf{Preparación de las vesículas} Las vesículas se obtienen a partir de la mezcla de lípidos DMPG/carotenoides y DPPG/carotenoides. Para ello, se prepara un stock de lípidos y de los caratoneides  en cloroformo o cloroformo/metanol para los lípidos cargados. Luego se prepara la mezcla de lípidos para obtener 5, 10, 15\%mol de carotenos. Los solventes son secados utilizando vapor de  \ce{N_2} gaseoso, y los residuos son removidos por liofilización durante la noche (deshidratación de un material disminuyendo la temperatura y la presión). La capa de lipidos obtenida es hidratada con el buffer o solución amortiguadora (HEPES a 20mM y con 145 mM de \ce{NaCl}) obteniendo de esta forma vesiculas multilamelares. Para obtener las vesículas unilamelares, las multilamelares son extruidas por un filtro de membrana Whaltman \textregistered, \cite{Murphy2019WhatmanSciences}, por encima de la temperatura de transicion de los lípidos. Para las vesículas conteniendo DMPG se realiza a 40\textdegree C y para aquellas que contengan DPPG a 60\textdegree C.
-\item \textbf{Objetivo 3} \textit{Estudio termotrópico de los espectros de emisión de carotenoides en membranas de DMPG y DPPG, determinando la eficiencia cuántica y los corrimientos en el espectro de emisi\'on en funci\'on de la concentración de carotenoides y el estado de fase $L_\alpha$ y $L_\beta$ de la membrana.}\\
-
-\textbf{Medición de Espectros}
-La influencia de los carotenoides en las membranas de DPPG y DMPG se hará utilizando el  espectrofotómetro contador de fotones ISS PC-1 acoplado a un control de temperatura, ver figura \ref{fig:fluo}. Este sistema permite la adquisición de los espectros de fluorescencia en función de la temperatura.
-Según la intensidad de fluorescencia de la muestra, se colocan en el monocromador rendijas con ancho 0.5mm, 1mm o 2mm los cuales dejan pasar un ancho de banda de 2, 4 u 8 nm.\\
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.6]{300px-Spectrofluorimeter.jpg}
-\caption{Fotografía del espectrofluorímetroa utilizar. Tomado de \cite{Suesca2019UAEquipment}.}
-\label{fig:fluo}
-\end{figure}
-
-La muestra se prepara agregando 100$\mu$L de las vesíulas unilamelares disueltas en 1400$\mu$L de buffer (HEPES a 20mM y con 145 mM de \ce{NaCl}) en una cubeta, donde la mezcla se mantiene homogénea mediante un agitador magnético. Para cada muestra se determinan las rejillas adecuadas dependiendo de la intensidad de fluorescencia, esto se hace tomando una medida inicial del espectro. Un vez seleccionadas las rejillas, se realiza la toma de espectros de emisión y absorción para cada temperatura entre 10\textdegree C y 55\textdegree C de tal manera que se pueda pasar por la transición de fase termotrópica de las membranas. Los espectros son guardados mediante el software de adquisición de datos del espectrofotómetro. Una vez obtenidos los espectros, se determina el número de onda
-para la máxima potencia radiada tanto de los espectros de absorción como de emisión, luego con cada valor se calcula un cuanto de energía $E=h\nu$ y con esto se halla la eficiencia cuántica, ecuación (2).
-\item \textbf{Objetivo 4}\textit{Estudio de la anisotrop\'ia del espectro de emisi\'on de los carotenoides en membranas de DMPG y DPPG en las fases $L_\alpha$ y $L_\beta$ para determinar si existe una alineaci\'on preferencial de los carotenoides dentro de la membrana.}\\
-
-\textbf{Anisotropía} Se realizan 6 mediciones en el espectrofluorómetro para membranas con DMPG y DPPG cada una a 5\%mol, 10\%mol y 15\%mol de carotenoides. Las mediciones se realizan usando el método de formato-L y en el estado estacionario (independiente del tiempo). Para realizar las medidas en el formato-L, el espectrofluorómetro tiene dos polarizadores UV grade Glan-Thompson, uno ubicado en el camino óptico de la fuente: polarizador de excitación y otro ubicado en el camino óptico del haz fluorescente: polarizador de emisión. El haz monocromático incidente pasa un polarizador vertical, luego llega a la muestra y de la muestra sale la radiación fluorescente. La radiación fluorescente pasa por un polarizador llamado polarizador de emisión ubicado a 90\textdegree de la dirección del haz incidente ver figura \ref{fig:aniso}, \cite{Lakowicz2006}.\\
-
-Para realizar las mediciones inicialmente se configuran los polarizadores uno a 90\textdegree y el otro a 0\textdegree, luego se realiza el mismo procedimiento con los dos polarizadores alineados. Se configura el ancho de banda de la fuente de excitación a un ancho de banda de 2, 4 u 8 nm, tomando un ancho de rejilla de 0.5mm, 1mm o 2mm respectivamente.Inicialmente se realizan mediciones de prueba para un haz monocromático incidente entre 450$n$m y 490$n$m (color azul) y el haz de emisión se monitorea entre 560 y 590 $n$m (amarillo). La idea de esto es concocer como es el corrimiento de Stokes de los carotenoides en la membrana. Ya conociendo las longitudes de onda de los haces monocromáticos, se realizan mediciones del espectro de fluorescencia variando la temperatura entre  10\textdegree C y 55\textdegree C de tal manera que se pueda pasar por la transición de fase de las membranas.\\
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.15]{aniso.png}
-\caption{Medición de anisotropía en el formato L. Tomado de \cite{Lakowicz2006}.}
-\label{fig:aniso}
-\end{figure}
-\end{itemize}
-
-%Exponer DETALLADAMENTE la metodolog\'ia que se usar\'a en la Monograf\'ia. 
-
+La orientación horizontal es un resultado inesperado, pues esta es una conformación inusual para lípidos. Esto nos llevó a pensar que algunos de los parámetros del campo de fuerzas de la estafiloxantina no estaban bien definidos. En efecto se encontró que los parámetros de torsión, obtenidos a través del servidor CHARMM-GUI para la cadena de enlaces dobles conjugados en la estafiloxantina, no son los más adecuados, debido a la inusual estructura del ácido daponourosporenóico. Como alternativa se utilizaron los parámetros de torsión de grupos benceno, que también presentan insaturaciones conjugadas, para corregir los parámetros de la cadena diaponeurosporenoica. El uso de los parámetros de torsión del benceno permitió que la cadena diaponeurosporenoica adoptara una estructura plana, esperada debido a la presencia de los enlaces dobles conjugados. Sin embargo, una validación rigurosa de estos parámetros no ha sido realizada. Adicionalmente, los ángulos de torsión entre los carbonos próximos al grupo éster (ver figura \ref{fig:stx}) reportaron una baja puntuación durante la parametrización por CHARMM-GUI, debido a la presencia del grupo carboxilo que induce una redistribución de la densidad electrónica. Es necesario corregir los parametros tomando esto en cuenta. Adicionalmente, para descartar posibles artefactos introducidos por uno u otro campo de fuerzas en la orientación preferente de estafiloxantina, se hace indispensable parametrizar esta molécula con otro conjunto de parámetros, por ejemplo AMBER.
+\input{objetivos.tex}
+\input{metodologia.tex}
 %Monograf\'ia te\'orica o computacional: ¿C\'omo se har\'an los c\'alculos te\'oricos? ¿C\'omo se har\'an las simulaciones? ¿Qu\'e requerimientos computacionales se necesitan? ¿Qu\'e espacios f\'isicos o virtuales se van a utilizar?
-
-%Monograf\'ia experimental: Recordar que para ser aprobada, los aparatos e insumos experimentales que se usar\'an en la Monograf\'ia deben estar previamente disponibles en la Universidad, o garantizar su disponibilidad para el tiempo en el que se realizar\'a la misma. ¿Qu\'e montajes experimentales se van a usar y que material se requiere? ¿En qu\'e espacio f\'isico se llevar\'an a cabo los experimentos? Si se usan aparatos externos, ¿qu\'e permisos se necesitan? Si hay que realizar pagos a terceros, ¿c\'omo se financiar\'a esto?
 
 \section{Cronograma}
 
 \begin{table}[htb]
 	\begin{tabular}{|c|cccccccc| }
 	\hline
-	Tareas $\backslash$ Semanas & 2 & 4 & 6 & 8 & 10 & 12 & 14 & 16\\
+	Objetivo $\backslash$ Mes & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
 	\hline
-	1 & X & X & X  &  X &   &   & &  \\
-	2 &   &  & &  & X & X &X  & \\
-	3 &   &   &  &  &   &   & & X\\
-	4 &  &  &  &  &  &  & & \\
-	\hline
-	\end{tabular}
-\end{table}
-\begin{table}[htb]
-	\begin{tabular}{|c|cccccccc| }
-	\hline
-	Tareas $\backslash$ Semanas & 18 & 20 & 22 & 24 & 26 & 28 & 30 & 32\\
-	\hline
-	1 &  &  &   &   &   &X  &X & X  \\
-	2 &   &  &  &  & & X &  X &X\\
-	3 & X  &X   & &  &   &  X &X & X\\
-	4 &  &  & X & X & X &  X&X  &X \\
+	1 & X &  &  &  &  &  &  &  \\
+	2 & X & X & X &  &  &  &  &  \\
+	3 &   & X & X & X &   &  &  &  \\
+	4 &  &  &  &  & X & X & X & \\
+	Escritura documento final y artículo&  &  &  &  &  & X & X & X \\
 	\hline
 	\end{tabular}
 \end{table}
-\vspace{1mm}
+\vspace{3mm}
 
 \section{Personas Conocedoras del Tema}
 
 %Nombres de por lo menos 3 profesores que conozcan del tema. Uno de ellos debe ser profesor de planta de la Universidad de los Andes.
 
 \begin{itemize}
-\item	Jesus Perez Gil (Universidad Complutense de Madrid)\\
-\href{mailto:jperezgi@ucm.es}{jperezgi@ucm.es}\\
-\href{http://www.bbm1.ucm.es/biomil/}{http://www.bbm1.ucm.es/biomil/}
-\item Marcela Manrique (Universidad de Antioquia)\\
-\href{mailto:marcela.manrique@udea.edu.co}{marcela.manrique@udea.edu.co}
-\item Luis Bagatolli  (MEMPHYS Universidad de Copenhagen)\\
-\href{mailto:lbagatolli@immf.uncor.edu}{lbagatolli@immf.uncor.edu}\\
-\href{http://memphys.dk/people/luis/index.html}{http://memphys.dk/people/luis/index.html}
+\item Gian Pietro Miscione (Universidad de los Andes)\\
+\href{mailto:gp.miscione57@uniandes.edu.co}{gp.miscione57@uniandes.edu.co}\\
+\href{http://cobo.uniandes.edu.co/}{http://cobo.uniandes.edu.co/}
+\item Gilles Paul Pieffet
+ (Universidad Antonio Nariño)\\
+\href{mailto:gp.pieffet@uan.edu.co}{gp.pieffet@uan.edu.co}
 \item Antonio Manu Forero Shelton (Universidad de los Andes)\\
 \href{mailto:anforero@uniandes.edu.co}{anforero@uniandes.edu.co}
 \end{itemize}
 \bibliographystyle{ieeetr}
 \bibliography{references}
 
-%\begin{thebibliography}{10}
-
-%\bibitem{Jerry} J. Banks. \textit{Discrete-Event System Simulation}. Fourth Edition. Prentice Hall International Series in Industrial and Systems Engineering, pg 86 - 116 y 219 - 235, (2005).
-
-%\bibitem{Bronner} P. Bronner, A. Strunz, C. Silberhorn \& J.P. Meyn. European Journal of Physics, \textbf{30}, 1189-1200, (2009).
-
-%\bibitem{LabInt} P. D\'iaz \& N. Barbosa: \textit{Obtenci\'on de n\'umeros aleatorios}. Informe final del curso Laboratorio Intermedio. Universidad de Los Andes, Bogot\'a, Colombia, (2012).
-
-%\bibitem{Stefannov} A. Stefanov , N. Gisin , O. Guinnard , L. Guinnard \& H. Zbinden. Journal of Modern Optics, \textbf{47}:4, 595-598, (2000).
-
-%\end{thebibliography}
-
 \section*{Firma del Director}
 \vspace{1.5cm}
-
-
+\begin{figure}[h]
+\begin{center}
+    \includegraphics[scale=0.6]{firma.jpg}
+ % \caption{}
+  \label{fig:firma}
+\end{center}
+\end{figure}
 \end{document} 

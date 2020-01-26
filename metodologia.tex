@@ -1,0 +1,67 @@
+\section{Metodología}
+
+\begin{enumerate}
+\item \textbf{Reproducir las simulaciones por dinámica molecular de estafiloxantina en DMPG y DPPG realizadas  por Meléndez et al. \cite{MelendezDelgado2018StudyingBilayers}, utilizando los parámetros no optimizados de la cadena diaponeurosporenoica.}\label{item:1}\\
+
+\textbf{Ensamblaje}\\
+Se ensamblarán las bicapas lipídicas DMPG y DPPG mediante la herramienta de ensamblaje de CHARMM-GUI \cite{Sunhwan2008CHARMM-GUI:CHARMM}, insertando 64 lípidos por monocapa. Adicionalmente, a cada sistema se le agregarán 45 moléculas de agua por lípido,  un ion de \ce{Na^+} por lípido  para contrarrestar la carga negativa y 0.15M de \ce{NaCl} para reproducir la condiciones fisiológicas de sal.\\
+Dentro de esta membrana se insertará posteriormente una molécula de estafiloxantina. Partiendo del archivo SMILES tomado de \cite{NationalCenterforBiotechnologyInformationPubChemCID=24892781} y utilizando también CHARMM-GUI se obtendrán la estructura tridimensional y el campo de fuerzas de todo el sistema. Una vez finalizado este procedimiento se cambiarán los términos de los ángulos dihedros  de la cadena diaponeurosporenoica por aquellos asociados a anillos aromáticos, los cuales son mas representativos de un sistema deslocalizado de enlaces dobles conjugados parecido al que presenta la cadena diaponeurosporenoica.\\
+\textbf{Minimización de la Energía}\\
+Para remover sobrelapamiento entre átomos durante el proceso de ensamblaje, que pueda causar inestabilidades durante las simulaciones de dinámica molecular, se realizará una minimización de la energía, por 5000 pasos, usando el método de gradiente decreciente. Está simulación se realizará con el paquete de simulación principal GROMACS \cite{AbrahamGROMACS2019}.\\
+
+\textbf{Relajación}\\
+Las coordenadas obtenidas a partir de la minimización de la energía se relajarán en 6 simulaciones de dinámica molecular sucesivas, de 25ps cada una, integrando las ecuaciones de movimiento a pasos discretos de tiempo de 1fs. Este valor es 10 veces menor al período asociado a la frecuencias de vibración más alta encontrada para este sistema, correspondiente a fluctuaciones en las posiciones en los átomos de hidrógeno. Durante cada una de las equilibraciones se impondrán restricciones en las posiciones y en los ángulos dihedros de un átomo en la cabeza de cada lípido, con el fin de que estos no se desvíen significativamente de sus posiciones iniciales y que las cadenas lipídicas no adopten orientaciones artificiales. Estas restricciones se irán removiendo gradualmente durante las 6 simulaciones de relajación.\\
+
+\textbf{Simulación}\\
+Se impondrán condiciones de frontera periódicas en una caja ortorrómbica. El sistema se mantendrá a una presión de 1bar y a temperatura de 323K constantes (condiciones termodinámicas NPT) acoplándolo a una barostato de Parinello-Rahman \cite{Parrinello1981PolymorphicMethod} y aun termostato de Nose-Hoover. Las interacciones no enlazantes de corto alcance se modelarán mediante un potencial de Lennard-Jones (ecuación \eqref{eq:7}). EL potencial de Coulomb (ecuación 7) se calculará por el medio del método de \textit{Particle Mesh Ewald (PME)}, apropiado para sistemas periódicos \cite{Darden1993ParticleSystems}. Los enlaces relacionados con los átomos de hidrógeno  se restringirán a través de ligaduras utilizando el algoritmo de LINCS \cite{Hess1997LINCS:Simulations} y para el caso del agua también el ángulo entre los dos hidrógenos también el ángulo entre los dos hidrógenos empleando el algoritmo SETTLE \cite{Miyamoto1992Settle:Models}. Estas restricciones permitirán aumentar el paso de tiempo de integración a 2fs. Para cada uno de los sistemas considerados se realizará una simulación de $1\mu$s.\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\item \textbf{Optimizar los parámetros relacionados  con los ángulos dihedros de la cadena diaponeurosporenoica próximos al enlace éster. Posteriormente, realizar simulaciones por dinámica molecular de estafiloxantina embebida en membranas de DMPG y DPPG.}\label{item:2}\\
+
+Los ángulos dihedros de la cadena diaponeurosporenoica próximos al enlace éster en la molécula de estafiloxantina (señalados en rojo en la figura \ref{fig:stx}) serán optimizados por medio de los métodos computacionales cuánticos propuestos por Grudzinski et al. \cite{Grudzinski2017LocalizationBilayer} y Cerezo et al. \cite{Cerezo2012AntioxidantSimulations}. Estos cálculos permitirán describir de manera apropiada el potencial dihedro de este enlace éster, que no es usual en lípidos debido a su cercanía a la cadena diaponeurosporenoica (la cual tiene electrones deslocalizados). Grudzinski et al. \cite{Grudzinski2017LocalizationBilayer} utilizaron una herramienta de optimización basada en Gaussian e implementada en el programa de visualización VMD para calibrar los parámetros de los carotenoides Xanthophylls \cite{Grudzinski2017LocalizationBilayer}. Adicionalmente, Cerezo et al., usando también Gaussian-09 \cite{Cerezo2012AntioxidantSimulations}, encontró la energía potencial como función de los ángulos dihedros de la cadena poliénica de un $\beta$-caroteno. Una vez obtenidos estos parámetros, se realizarán simulaciones de dinámica molecular d estafiloxantina inmersa en bicapas de lípidos DMPG y DPPG, siguiendo el mismo procedimiento indicado en el numeral \ref{item:1}.\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\item \textbf{ Generar un campo de fuerzas para estafiloxantina utilizando los parámetros de AMBER y realizar simulaciones por dinámica molecular con este campo de fuerzas. Esto con el fin de demostrar que el comportamiento de la molécula no depende del tipo de potencial utilizado.}\label{item:3}\\
+Se obtendrán parámetros para estafiloxantina utilizando el campo de fuerza de AMBER. Para esto se utilizarán las herramientas del \textit{Generalized Amber Force Field} (GAAF) \cite{Amber2016}, teniendo en cuenta que los parámetros obtenidos representan apropiadamente la geometría de la cadena diaponeurosporenoica y el enlace éster. Se realizarán simulaciones de dinámica molecular para estafiloxantina insertada en bicapas de DMPG y DPPG, utilizando el procedimiento indicado en el numeral \ref{item:1}. Este nuevo conjunto de simulaciones será comparado con las simulaciones obtenidas con CHARMM (numeral \ref{item:2}) y de esta manera descartar posibles artefactos en la dinámica de estafiloxantina causados por el campo de fuerzas.\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\item \textbf{ Examinar el efecto de la concentración de estafiloxantina sobre las propiedades de la bicapa lipídica, realizando simulaciones de dinámica molecular con parámetros generados en los numerales 2 y 3, aumentando  la concentración de estafiloxantina al 15\%.}\label{item:4}\\
+
+En mediciones experimentales se ha observado que las propiedades biofísicas como la constante de doblamiento de la membrana son sensibles a concentraciones de estafiloxantina en el orden del 15\% molar \cite{Perez-LopezVariationsProperties}. Por lo tanto, en este último objetivo vamos a explorar es el efecto que tiene incluir un número de moléculas de estafiloxantina que refleje esta concentración (aproximadamente 19 moléculas). Para realizar esto, se llevan a cabo simulaciones utilizando también membranas modelo con DPPG Y DMPG, con un 15\% molar de estos lípidos reemplazados por estafiloxantina. Estas simulaciones también se realizarán para los dos campos de fuerza CHARMM y AMBER. EL protocolo de simulación será idéntico al del numeral \ref{item:1}.
+
+\end{enumerate}
+%%%%%%%%%%%%%%%%%%%%%%%%%, %%%%%%%%%%%
+\subsection*{Análisis de las Simulaciones}
+De las trayectorias generadas en las simulacioines se extraerán distintos observables que nos permitan analizar cuantitativamente el comportamiento de estafiloxantina y su efecto en la bicapa de lípidos circundantes. Los siguientes observables serán por consiguiente calculados, tanto en función del tiempo como en promedio durante toda la simulación:\\
+\begin{enumerate}
+\item \textbf{Orientación de la cadena diaponeurosporenoica}: El ángulo formado por la cadena diaponeurosporenoica en la estafiloxantina con respecto a la membrana será monitoreado durante las simulaciones para así poder determinar su orientación (u orientaciones) de preferencia.
+\item \textbf{Área por lípido}: Como una medida del grado de compactamiento de la bicapa se hallará el área por lípido global mediante la fórmula:
+\begin{equation}
+APL=\frac{xy}{N/2}
+\end{equation}
+donde $xy$ es el tamaño lateral de la caja de simulación y $N$ es el número de lípidos.Adicionalmente, se hará una medición local de area descrita en las siguientes secciones.
+\item \textbf{Espesor de la membrana}:
+El espesor de la membrana se hallará monitoreando la densidad electrónica de los lípidos como función de la coordenada normal al plano de la membrana. De esta densidad electrónica se hallan los dos máximos que correspondan a los grupos fosfato y se calcula la distancia entre ellos.
+\item  \textbf{Parámetro de orden del deuterio}:
+El parámetro de orden del deuterio se calculará como una medida de la orientación promedio de los lípidos DMPG y DPPG. Este parámetro se define de la siguiente manera: \cite{Aponte-santamariaSupplementaryFigures}\\
+\begin{equation}
+S_{CD}=\frac{2}{3}S_{xx}+\frac{1}{3}S_{yy},
+ \end{equation}
+donde $S_{xx}$ y $S_{yy}$ se definen de la siguiente manera:
+\begin{equation}
+S_{xx}=\frac{1}{2}\langle 3\cos^2\theta-1\rangle,
+ \end{equation}
+\begin{equation}
+S_{yy}=\frac{1}{2}\langle 3\cos^2\alpha-1\rangle.
+ \end{equation}
+$\theta$ es el ángulo medido respecto al vector normal a la membrana y el vector normal al plano definido por los carbonos \ce{C_{i-1}}, \ce{C_{i}} y \ce{C_{i+1}}; $\alpha$ es el ángulo medido respecto al vector normal a la membrana y un vector que pertenece al plano definido por los carbonos \ce{C_{i-1}}, \ce{C_{i}} y \ce{C_{i+1}} pero perpendicular al vector que conecta  \ce{C_{i-1}} y \ce{C_{i+1}}.
+
+\item \textbf{Coeficiente de difusión}: 
+Adicional a todas estas medidas estructurales, se analizará la difusión de los distintos componentes de la membrana monitoreando el desplazamiento lateral cuadrático promedio $\langle\Delta x^2\rangle$. El coeficiente de difusión, D, se hallará mediante una regresión lineal de este desplazamiento en función del tiempo, gracias a la relación de Einstein:
+\begin{equation}
+\langle\Delta x^2\rangle= 4Dt
+ \end{equation}
+\end{enumerate}
+%%%%%%%%%%%%%%%%%%%%%5
+Todas estas cantidades se calcularán de manera global para toda la bicapa de lípidos. También se calcularán el area por lípido de manera local a diferentes posiciones alrededor de la molécula de estafiloxantina usando un algoritmo basado en teselaciones de Voronoy, implementado dentro de la herramienta glomepro \cite{MelendezDelgado2018StudyingBilayers}.\\
+
+El estudiante Cabrera realizará todas las simulaciones, análisis de resultados y escritura de los documentos correspondientes supervisado por el profesor Chad Leidy (física) y el Dr. Camilo Aponte Santamaría (MPTG-CBP). Él tendrá un espacio de trabajo en la oficina del MPTG-CBP y utilizará el computador y el acceso al clúster proporcionados por el Departamento de Física.
