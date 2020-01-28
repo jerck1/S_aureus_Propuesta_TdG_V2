@@ -1,4 +1,6 @@
-git pull overleaf master
+git pull overleaf master --allow-unrelated-histories
+#git pull overleaf master
+git revert --mainline 1 HEAD
 #echo johncafre@gmail.com
 #echo 9a0221220277183457
 #echo johncafre@gmail.com
